@@ -35,3 +35,25 @@ CREATE TABLE Matches (
     match_status VARCHAR(20) NOT NULL CHECK (match_status IN ('Available', 'Selling Fast', 'Sold Out', 'Postponed'))
 );
 
+-- =========================================================================
+-- 3. CREATE BOOKINGS TABLE
+-- =========================================================================
+CREATE TABLE Bookings (
+    booking_id INT PRIMARY KEY,
+    user_id INT NOT NULL,
+    match_id INT NOT NULL,
+    seat_number VARCHAR(10),
+    payment_status VARCHAR(20) CHECK (payment_status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded') OR payment_status IS NULL),
+    total_cost NUMERIC(10,2) NOT NULL CHECK (total_cost >= 0),
+
+    CONSTRAINT fk_bookings_user
+        FOREIGN KEY (user_id) REFERENCES Users (user_id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_bookings_match
+        FOREIGN KEY (match_id) REFERENCES Matches (match_id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+
